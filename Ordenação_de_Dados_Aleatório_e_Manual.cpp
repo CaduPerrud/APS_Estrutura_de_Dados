@@ -101,12 +101,14 @@ void merge(std::vector<int> &dados, int esquerda, int meio, int direita) {
     dados[k++] = direitaArr[j++];
 }
 
-void mergeSort(std::vector<int> &dados, int esquerda, int direita) {
-  if (esquerda < direita) {
-    int meio = esquerda + (direita - esquerda) / 2;
-    mergeSort(dados, esquerda, meio);
-    mergeSort(dados, meio + 1, direita);
-    merge(dados, esquerda, meio, direita);
+void mergeSort(std::vector<int> &dados) {
+  int n = dados.size();
+  for (int tamanho = 1; tamanho < n; tamanho *= 2) {
+    for (int esquerda = 0; esquerda < n - tamanho; esquerda += 2 * tamanho) {
+      int meio = esquerda + tamanho - 1;
+      int direita = std::min(esquerda + 2 * tamanho - 1, n - 1);
+      merge(dados, esquerda, meio, direita);
+    }
   }
 }
 
@@ -138,7 +140,7 @@ void ordenarDados(std::vector<int> &dados, int tipoOrdenacao) {
   } else if (tipoOrdenacao == 2) {
     auto inicio =
         std::chrono::steady_clock::now(); // Início da medição de tempo
-    mergeSort(dados, 0, dados.size() - 1);
+    mergeSort(dados);
     auto fim = std::chrono::steady_clock::now(); // Fim da medição de tempo
     std::chrono::duration<double, std::milli> tempoGasto =
         fim - inicio; // Cálculo do tempo
