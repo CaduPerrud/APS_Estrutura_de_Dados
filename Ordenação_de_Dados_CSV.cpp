@@ -58,7 +58,7 @@ int main() {
     ordenarSelectionSort(dados, colunaParaOrdenar);
     break;
   case 3:
-    ordenarMergeSort(dados, 0, dados.size() - 1, colunaParaOrdenar);
+    ordenarMergeSort(dados, colunaParaOrdenar);
     break;
   default:
     cerr << "Algoritmo inválido!" << endl;
@@ -184,13 +184,19 @@ void merge(vector < csvRow > & dados, int inicio, int meio, int fim,
   }
 }
 
-void ordenarMergeSort(vector < csvRow > & dados, int inicio, int fim,
-  int indiceColuna) {
-  if (inicio < fim) {
-    int meio = (inicio + fim) / 2;
-    ordenarMergeSort(dados, inicio, meio, indiceColuna);
-    ordenarMergeSort(dados, meio + 1, fim, indiceColuna);
-    merge(dados, inicio, meio, fim, indiceColuna);
+void ordenarMergeSort(vector<csvRow> &dados, int indiceColuna) {
+  int n = dados.size();
+
+  // Tamanho atual da sub-lista a ser mesclada
+  for (int tamanhoAtual = 1; tamanhoAtual <= n - 1; tamanhoAtual *= 2) {
+    // Escolhe o ponto inicial para a sub-lista atual
+    for (int inicioEsquerda = 0; inicioEsquerda < n - 1; inicioEsquerda += 2 * tamanhoAtual) {
+      int meio = min(inicioEsquerda + tamanhoAtual - 1, n - 1);
+      int fimDireita = min(inicioEsquerda + 2 * tamanhoAtual - 1, n - 1);
+
+      // Mescla as duas metades
+      merge(dados, inicioEsquerda, meio, fimDireita, indiceColuna);
+    }
   }
 }
 
